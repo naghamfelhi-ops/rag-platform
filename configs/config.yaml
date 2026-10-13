@@ -1,0 +1,15 @@
+seed: 42
+
+corpus:
+  repos:
+    - name: duckdb
+      url: https://github.com/duckdb/duckdb-web.git
+      docs_path: docs
+    - name: kestra
+      url: https://github.com/kestra-io/docs.git
+      docs_path: content/docs
+
+chunking:
+  max_chars: 1500
+  overlap: 200
+  min_chars: 100
