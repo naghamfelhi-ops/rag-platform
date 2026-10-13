@@ -4,7 +4,7 @@ corpus:
   repos:
     - name: duckdb
       url: https://github.com/duckdb/duckdb-web.git
-      docs_path: docs
+      docs_path: docs/current
     - name: kestra
       url: https://github.com/kestra-io/docs.git
       docs_path: content/docs
