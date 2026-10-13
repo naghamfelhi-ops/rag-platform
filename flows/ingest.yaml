@@ -1,0 +1,28 @@
+id: rag_ingest
+namespace: rag
+
+tasks:
+  - id: wdir
+    type: io.kestra.plugin.core.flow.WorkingDirectory
+    tasks:
+      - id: clone
+        type: io.kestra.plugin.git.Clone
+        url: https://github.com/naghamfelhi-ops/rag-platform
+        branch: main
+
+      - id: pipeline
+        type: io.kestra.plugin.scripts.python.Commands
+        containerImage: python:3.13-slim
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+        beforeCommands:
+          - apt-get update && apt-get install -y git
+          - pip install pyyaml pandas pyarrow
+        commands:
+          - python -m src.rag.ingest
+          - python -m src.rag.chunk
+
+triggers:
+  - id: weekly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 6 * * 1"
