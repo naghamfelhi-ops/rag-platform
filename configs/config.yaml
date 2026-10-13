@@ -13,3 +13,7 @@ chunking:
   max_chars: 1500
   overlap: 200
   min_chars: 100
+  exclude:
+    - clients/python/reference/index.md
+    - clients/c/api.md
+    - core_extensions/spatial/functions.md

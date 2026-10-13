@@ -28,12 +28,17 @@ def chunk_markdown(text, source, max_chars=1500, overlap=200, min_chars=100):
 def run():
     cfg = load_config()
     c = cfg["chunking"]
+    exclude = set(c.get("exclude", []))
     rows = []
     for repo in cfg["corpus"]["repos"]:
         base = Path("data/raw") / repo["name"]
-        for f in sorted((base / repo["docs_path"]).rglob("*.md")):
+        docs_dir = base / repo["docs_path"]
+        for f in sorted(docs_dir.rglob("*.md")):
+            rel = f.relative_to(docs_dir).as_posix()
+            if rel in exclude:
+                continue
             text = f.read_text(encoding="utf-8", errors="ignore")
-            source = f"{repo['name']}/{f.relative_to(base / repo['docs_path']).as_posix()}"
+            source = f"{repo['name']}/{rel}"
             rows += chunk_markdown(text, source, c["max_chars"], c["overlap"], c["min_chars"])
     df = pd.DataFrame(rows).drop_duplicates(subset="text").reset_index(drop=True)
     df.insert(0, "chunk_id", df.index)
